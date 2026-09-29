@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Insta OSINT</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <main class="container">
+    <section class="hero">
+      <span class="badge">PUBLIC DATA ONLY</span>
+      <h1>Insta OSINT</h1>
+      <p>Discover publicly indexed Instagram information from a simple web interface.</p>
+    </section>
+
+    <section class="card">
+      <label for="area">Area / Location</label>
+      <input id="area" placeholder="e.g. Hinjewadi Pune">
+
+      <label for="keyword">Keyword</label>
+      <input id="keyword" placeholder="e.g. cafe, gym, college">
+
+      <button id="search">Search Public Data</button>
+      <div id="status" class="status"></div>
+      <div id="results"></div>
+    </section>
+  </main>
+
+  <script src="{{ url_for('static', filename='app.js') }}"></script>
+</body>
+</html>
