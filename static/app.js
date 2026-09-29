@@ -7,44 +7,43 @@ const results = document.getElementById("results");
 button.addEventListener("click", async () => {
   const areaValue = area.value.trim();
   const keywordValue = keyword.value.trim();
-
-  results.innerHTML = "";
+  results.replaceChildren();
 
   if (!areaValue) {
     status.textContent = "Please enter an area.";
     return;
   }
 
-  status.textContent = "Preparing public search...";
+  button.disabled = true;
+  status.textContent = "Building a public search query...";
 
   try {
     const response = await fetch("/api/search", {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        area: areaValue,
-        keyword: keywordValue
-      })
+      headers: {"Content-Type": "application/json"},
+      body: JSON.stringify({area: areaValue, keyword: keywordValue})
     });
-
     const data = await response.json();
+    if (!response.ok) throw new Error(data.error || "Search failed.");
 
-    if (!response.ok) {
-      throw new Error(data.error || "Search failed.");
-    }
+    status.textContent = "Public search query ready.";
 
-    status.textContent = "Query received.";
-
-    results.innerHTML = `
-      <div class="result">
-        <strong>Backend connected ✅</strong>
-        <p>
-          Area: ${data.query.area}<br>
-          Keyword: ${data.query.keyword || "none"}
-        </p>
-      </div>
-    `;
+    const box = document.createElement("div");
+    box.className = "result";
+    const title = document.createElement("strong");
+    title.textContent = "Public web search ready";
+    const note = document.createElement("p");
+    note.textContent = "Review publicly indexed results yourself; the app does not access private accounts.";
+    const link = document.createElement("a");
+    link.href = data.search_url;
+    link.target = "_blank";
+    link.rel = "noopener noreferrer";
+    link.textContent = "Open public search";
+    box.append(title, note, link);
+    results.appendChild(box);
   } catch (error) {
-    status.textContent = `Error: ${error.message}`;
+    status.textContent = "Error: " + error.message;
+  } finally {
+    button.disabled = false;
   }
 });
